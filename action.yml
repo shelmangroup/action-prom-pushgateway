@@ -1,17 +1,10 @@
 name: 'Action-To-Pushgateway'
 description: 'Send prometehus metrics to pushgateway'
 inputs:
-  milliseconds:  # id of input
-    description: 'number of milliseconds to wait'
-    required: true
-    default: '1000'
   pushgateway:
     description: 'prometheus pushgateway address'
     required: true
     default: 'localhost:9091'
-outputs:
-  time: # output will be available to future steps 
-    description: 'The message to output'
 runs:
   using: 'node12'
   main: 'dist/index.js'
