@@ -9,11 +9,12 @@ async function run() {
     const pushgatewayAddr = core.getInput('pushgateway')
     console.log(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
 
-    let gateway = new client.Pushgateway(pushgatewayAddr);
-
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);
+
+    let gateway = new client.Pushgateway(pushgatewayAddr);
+    gateway.constructor
 
   }
   catch (error) {
