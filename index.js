@@ -18,6 +18,10 @@ async function run() {
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
 
     console.log(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
+    console.log(`github.context.action: ${github.context.action}`)
+    console.log(`github.context.job: ${github.context.job}`)
+    console.log(`github.context.runId: ${github.context.runId}`)
+    console.log(`github.context.repo: ${github.context.repo}`)
 
     const test = new client.Counter({
       name: `${prefix}_test`,
@@ -28,12 +32,11 @@ async function run() {
     test.inc(10);
 
     gateway.push({ jobName: prefix }, (err, resp, body) => {
-      core.log(`Error: ${err}`);
-      core.log(`Body: ${body}`);
+      console.log(`Error: ${err}`);
+      console.log(`Body: ${body}`);
     });
 
-    core.log('Dummy data')
-
+    console.log('mark end')
 
   }
   catch (error) {
