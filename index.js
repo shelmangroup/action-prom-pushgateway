@@ -34,6 +34,9 @@ async function run() {
     });
 
 
+    console.log('Dummy data')
+
+
   }
   catch (error) {
     core.setFailed(error.message);
