@@ -30,7 +30,7 @@ async function run() {
     gateway.push({ jobName: prefix }, (err, resp, body) => {
       console.log(`Error: ${err}`);
       console.log(`Body: ${body}`);
-      console.log(`Response status: ${resp.statusCode}`);
+      // console.log(`Response status: ${resp.statusCode}`);
     });
 
 
