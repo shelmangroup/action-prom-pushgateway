@@ -10,18 +10,18 @@ async function run() {
 
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    core.info(`The event payload: ${payload}`);
 
     const prefix = 'github_actions';
     const Registry = client.Registry;
     const register = new Registry();
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
 
-    console.log(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
-    console.log(`github.context.action: ${github.context.action}`)
-    console.log(`github.context.job: ${github.context.job}`)
-    console.log(`github.context.runId: ${github.context.runId}`)
-    console.log(`github.context.repo: ${github.context.repo}`)
+    core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
+    core.info(`github.context.action: ${github.context.action}`)
+    core.info(`github.context.job: ${github.context.job}`)
+    core.info(`github.context.runId: ${github.context.runId}`)
+    core.info(`github.context.repo: github.com/${github.context.repo.owner}/${github.context.repo.repo}`)
 
     const test = new client.Counter({
       name: `${prefix}_test`,
@@ -31,12 +31,12 @@ async function run() {
     register.registerMetric(test);
     test.inc(10);
 
-    gateway.push({ jobName: prefix }, (err, resp, body) => {
-      console.log(`Error: ${err}`);
-      console.log(`Body: ${body}`);
+    await gateway.push({ jobName: prefix }, (err, resp, body) => {
+      core.info(`Error: ${err}`);
+      core.info(`Body: ${body}`);
     });
 
-    console.log('mark end')
+    core.info('mark end')
 
   }
   catch (error) {
