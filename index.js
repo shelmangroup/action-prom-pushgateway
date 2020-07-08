@@ -28,13 +28,11 @@ async function run() {
     test.inc(10);
 
     gateway.push({ jobName: prefix }, (err, resp, body) => {
-      console.log(`Error: ${err}`);
-      console.log(`Body: ${body}`);
-      // console.log(`Response status: ${resp.statusCode}`);
+      core.log(`Error: ${err}`);
+      core.log(`Body: ${body}`);
     });
 
-
-    console.log('Dummy data')
+    core.log('Dummy data')
 
 
   }
