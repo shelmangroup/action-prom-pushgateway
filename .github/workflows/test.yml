@@ -31,4 +31,4 @@ jobs:
       with:
         pushgateway: "http://localhost:9091"
     - name: get metrics
-      run: curl http://localhost:9091/metrics | grep github
+      run: curl -s http://localhost:9091/metrics | grep github
