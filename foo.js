@@ -1,25 +1,26 @@
+'use strict';
+
 const client = require('prom-client');
 
-
-function hello() {
+function foo() {
     const Registry = client.Registry;
     const register = new Registry();
+    const gateway = new client.Pushgateway('http://127.0.0.1:9091', [], register);
+    const prefix = 'github_actions';
 
-    let gateway = new client.Pushgateway('http://127.0.0.1:9091',  [], register);
-
-    const test = new client.Counter({
-        name: 'prefix_test',
-        help: 'prefix_test',
-        registers: [register]
+    const dummy = new client.Counter({
+        name: `${prefix}_test`,
+        help: `${prefix}_test`,
+        registers: [register],
     });
-    register.registerMetric(test);
-    test.inc(10);
+    register.registerMetric(dummy);
+    dummy.inc(10);
 
-    gateway.push({ jobName: 'github-action-checks' }, function (err, resp, body) {
-        console.log(`Error: ${err}`)
-        console.log(`Body: ${body}`)
-        console.log(`Response status: ${resp.statusCode}`)
+    gateway.push({ jobName: prefix }, (err, resp, body) => {
+        console.log(`Error: ${err}`);
+        console.log(`Body: ${body}`);
+        console.log(`Response status: ${resp.statusCode}`);
     });
 }
 
-hello()
+foo();
