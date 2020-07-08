@@ -29,4 +29,6 @@ jobs:
     - uses: actions/checkout@v1
     - uses: ./
       with:
-        pushgateway: "http://pushgateway:9091"
+        pushgateway: "http://localhost:9091"
+    - name: get metrics
+      run: curl http://localhost:9091/metrics | grep github
