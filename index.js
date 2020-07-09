@@ -46,6 +46,7 @@ async function run() {
       run_id,
     });
 
+    core.info(`workloadResponse ${workflowResponse}`)
     const workflow = JSON.stringify(workflowResponse, undefined, 2)
     core.info(`workflow: ${workflow}`)
     core.info('mark end')
