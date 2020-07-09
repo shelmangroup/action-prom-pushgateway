@@ -7,6 +7,9 @@ inputs:
   token:
     description: 'github token'
     required: true
+  previousstate:
+    description: 'The last step status'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

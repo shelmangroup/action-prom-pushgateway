@@ -17,13 +17,15 @@ jobs:
           - 9091:9091
     steps:
     - uses: actions/checkout@v1
-    - run: npm ci
     - run: npm test
 
     - uses: ./
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
         pushgateway: "http://localhost:9091"
+        previousstate: ${{ job.status }}
+      if: always()
 
     - name: get metrics
       run: curl -s http://localhost:9091/metrics | grep github
+      if: always()
