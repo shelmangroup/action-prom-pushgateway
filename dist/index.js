@@ -540,19 +540,20 @@ async function run() {
     });
 
     // octokit testing
-    const token = core.getInput('token');
-    const octokit = github.getOctokit(token)
+    // const token = core.getInput('token');
+    // const octokit = github.getOctokit(token);
 
-    const jobsListWorkflowObj = await octokit.actions.listJobsForWorkflowRun({
-      owner,
-      repo,
-      run_id
-    });
+    // const jobsListWorkflowObj = await octokit.actions.listJobsForWorkflowRun({
+    //   owner,
+    //   repo,
+    //   run_id
+    // });
 
-    core.info(`name: ${jobsListWorkflowObj.before.name} status: ${jobsListWorkflowObj.before.status}`)
+    // const jobsList = JSON.stringify(jobsListWorkflowObj, undefined, 2)
+    // core.info(`jobsLit: ${jobsList}`)
 
-    const jobsList = JSON.stringify(jobsListWorkflowObj, undefined, 2)
-    core.info(`jobsLit: ${jobsList}`)
+    const previousstate = core.getInput('previousstate');
+    core.info(`previousstate: ${previousstate}`);
 
 
     core.info('mark end')
