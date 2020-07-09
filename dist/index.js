@@ -510,41 +510,54 @@ const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const client = __webpack_require__(706);
 
+function statusValue(input) {
+  var change_me = 0;
+  if (input === 'success') {
+    change_me = 1;
+  }
+  return change_me
+}
 
-// most @actions toolkit packages have async methods
 async function run() {
   try { 
     const pushgatewayAddr = core.getInput('pushgateway')
-
-    // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
-
     const prefix = 'github_actions';
     const Registry = client.Registry;
     const register = new Registry();
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
+    const run_id = github.context.runId;
+    const job = github.context.job;
+    const repo = `github.com/${github.context.repo.owner}/${github.context.repo.repo}`
 
-    console.log(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
-    console.log(`github.context.action: ${github.context.action}`)
-    console.log(`github.context.job: ${github.context.job}`)
-    console.log(`github.context.runId: ${github.context.runId}`)
-    console.log(`github.context.repo: ${github.context.repo}`)
+    core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
+    core.info(`github.context.job: ${job}`)
+    core.info(`github.context.runId: ${run_id}`)
+    core.info(`github.context.repo: ${repo}`)
 
-    const test = new client.Counter({
-      name: `${prefix}_test`,
-      help: `${prefix}_test`,
+    const previousstate = core.getInput('previousstate');
+    core.info(`previousstate: ${previousstate}`);
+    const state_num = statusValue(previousstate)
+
+    const metric_action_gauge = new client.Gauge({
+      name: `${prefix}_run`,
+      help: `${prefix}_run`,
       registers: [register],
+      labelNames: ['repo', 'status', 'run_id', `job`],
     });
-    register.registerMetric(test);
-    test.inc(10);
+    register.registerMetric(metric_action_gauge);
+    metric_action_gauge.set({
+      repo: repo,
+      status: previousstate,
+      run_id: run_id,
+      job: job,
+    }, state_num);
 
-    gateway.push({ jobName: prefix }, (err, resp, body) => {
-      console.log(`Error: ${err}`);
-      console.log(`Body: ${body}`);
+    await gateway.push({ jobName: prefix }, (err, resp, body) => {
+      core.info(`Error: ${err}`);
+      core.info(`Body: ${body}`);
     });
 
-    console.log('mark end')
+    core.info('mark end');
 
   }
   catch (error) {
@@ -552,7 +565,7 @@ async function run() {
   }
 }
 
-run()
+run();
 
 
 /***/ }),
