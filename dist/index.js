@@ -515,8 +515,7 @@ async function run() {
     const pushgatewayAddr = core.getInput('pushgateway')
 
     // Get the JSON webhook payload for the event that triggered the workflow
-    const payload = JSON.stringify(github.context.payload, undefined, 2)
-    core.info(`The event payload: ${payload}`);
+    // const payload = JSON.stringify(github.context.payload, undefined, 2)
 
     const prefix = 'github_actions';
     const Registry = client.Registry;
