@@ -29,6 +29,7 @@ jobs:
     - uses: actions/checkout@v1
     - uses: ./
       with:
+        myToken: ${{ secrets.GITHUB_TOKEN }}
         pushgateway: "http://localhost:9091"
     - name: get metrics
       run: curl -s http://localhost:9091/metrics | grep github
