@@ -554,7 +554,11 @@ async function run() {
     core.info(`jobsLit: ${jobsList}`)
 
 
-    const jobFromRunObj = await octokit.actions.getJobForWorkflowRun();
+    const jobFromRunObj = await octokit.actions.getJobForWorkflowRun({
+      owner,
+      repo,
+      run_id
+    });
     const jobFromRun = JSON.stringify(jobFromRunObj, undefined, 2)
     core.info(`jobFromRun: ${jobFromRun}`)
 
