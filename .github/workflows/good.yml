@@ -1,0 +1,32 @@
+name: "run good case"
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - 'releases/*'
+
+jobs:
+  trigger-good:
+    runs-on: ubuntu-latest
+    services:
+      pushgateway:
+        image: prom/pushgateway
+        ports:
+          - 9091:9091
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: trigger
+      run: exit 0
+
+    - uses: ./
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        pushgateway: "http://localhost:9091"
+        previousstate: ${{ job.status }}
+      if: always()
+
+    - name: get metrics
+      run: curl -s http://localhost:9091/metrics | grep github
+      if: always()
