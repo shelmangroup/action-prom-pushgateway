@@ -519,12 +519,12 @@ async function run() {
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
     const repo = github.context.repo.repo;
     const owner = github.context.repo.owner;
-    const run_id = github.context.runId;
+    // const run_id = github.context.runId;
 
     core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
     core.info(`github.context.job: ${github.context.job}`)
     core.info(`github.context.runId: ${github.context.runId}`)
-    core.info(`github.context.repo: github.com/${github.context.repo.owner}/${github.context.repo.repo}`)
+    core.info(`github.context.repo: github.com/${owner}/${repo}`)
 
     const test = new client.Counter({
       name: `${prefix}_test`,
