@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const client = require('prom-client');
-const { Octokit } = require("@octokit/rest");
 
 async function run() {
   try { 
@@ -40,9 +39,7 @@ async function run() {
 
     // octokit testing
     const token = core.getInput('token');
-    const octokit = new Octokit({
-      auth: token
-    });
+    const octokit = github.getOctokit(token)
 
     const workflowResponse = octokit.actions.getWorkflowRun({
       owner,
