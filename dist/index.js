@@ -509,27 +509,29 @@ module.exports = require("os");
 const core = __webpack_require__(470);
 const github = __webpack_require__(469);
 const client = __webpack_require__(706);
+const { Octokit } = __webpack_require__(889);
 
-
-// most @actions toolkit packages have async methods
 async function run() {
   try { 
     const pushgatewayAddr = core.getInput('pushgateway')
 
     // Get the JSON webhook payload for the event that triggered the workflow
     const payload = JSON.stringify(github.context.payload, undefined, 2)
-    console.log(`The event payload: ${payload}`);
+    core.info(`The event payload: ${payload}`);
 
     const prefix = 'github_actions';
     const Registry = client.Registry;
     const register = new Registry();
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
+    const repo = github.context.repo.repo;
+    const owner = github.context.repo.owner;
+    const run_id = github.context.runId;
 
-    console.log(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
-    console.log(`github.context.action: ${github.context.action}`)
-    console.log(`github.context.job: ${github.context.job}`)
-    console.log(`github.context.runId: ${github.context.runId}`)
-    console.log(`github.context.repo: github.com/${github.context.repo.owner}/${github.context.repo.repo}`)
+    core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
+    core.info(`github.context.action: ${github.context.action}`)
+    core.info(`github.context.job: ${github.context.job}`)
+    core.info(`github.context.runId: ${github.context.runId}`)
+    core.info(`github.context.repo: github.com/${github.context.repo.owner}/${github.context.repo.repo}`)
 
     const test = new client.Counter({
       name: `${prefix}_test`,
@@ -544,8 +546,23 @@ async function run() {
       core.info(`Body: ${body}`);
     });
 
+    // octokit testing
+    const myToken = core.getInput('myToken');
+    const octokit = new Octokit({
+      auth: myToken
+    });
 
-    console.log('mark end')
+    const workflowResponse = octokit.actions.getWorkflowRun({
+      owner,
+      repo,
+      run_id,
+    });
+
+    const workflow = JSON.stringify(workflowResponse, undefined, 2)
+    core.info(`workflow: ${workflow}`)
+    core.info('mark end')
+
+
 
   }
   catch (error) {
@@ -11798,6 +11815,31 @@ module.exports.metricNames = [PROCESS_START_TIME];
 
 /***/ }),
 
+/***/ 889:
+/***/ (function(__unusedmodule, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+var core = __webpack_require__(448);
+var pluginRequestLog = __webpack_require__(916);
+var pluginPaginateRest = __webpack_require__(299);
+var pluginRestEndpointMethods = __webpack_require__(842);
+
+const VERSION = "18.0.0";
+
+const Octokit = core.Octokit.plugin(pluginRequestLog.requestLog, pluginRestEndpointMethods.restEndpointMethods, pluginPaginateRest.paginateRest).defaults({
+  userAgent: `octokit-rest.js/${VERSION}`
+});
+
+exports.Octokit = Octokit;
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
 /***/ 898:
 /***/ (function(__unusedmodule, exports, __webpack_require__) {
 
@@ -11886,6 +11928,44 @@ function withCustomRequest(customRequest) {
 
 exports.graphql = graphql$1;
 exports.withCustomRequest = withCustomRequest;
+//# sourceMappingURL=index.js.map
+
+
+/***/ }),
+
+/***/ 916:
+/***/ (function(__unusedmodule, exports) {
+
+"use strict";
+
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
+const VERSION = "1.0.0";
+
+/**
+ * @param octokit Octokit instance
+ * @param options Options passed to Octokit constructor
+ */
+
+function requestLog(octokit) {
+  octokit.hook.wrap("request", (request, options) => {
+    octokit.log.debug("request", options);
+    const start = Date.now();
+    const requestOptions = octokit.request.endpoint.parse(options);
+    const path = requestOptions.url.replace(options.baseUrl, "");
+    return request(options).then(response => {
+      octokit.log.info(`${requestOptions.method} ${path} - ${response.status} in ${Date.now() - start}ms`);
+      return response;
+    }).catch(error => {
+      octokit.log.info(`${requestOptions.method} ${path} - ${error.status} in ${Date.now() - start}ms`);
+      throw error;
+    });
+  });
+}
+requestLog.VERSION = VERSION;
+
+exports.requestLog = requestLog;
 //# sourceMappingURL=index.js.map
 
 
