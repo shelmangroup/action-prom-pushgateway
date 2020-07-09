@@ -4,9 +4,6 @@ inputs:
   pushgateway:
     description: 'prometheus pushgateway address'
     required: true
-  token:
-    description: 'github token'
-    required: true
   previousstate:
     description: 'The last step status'
     required: true
