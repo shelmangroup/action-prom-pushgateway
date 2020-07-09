@@ -527,7 +527,7 @@ async function run() {
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
     const run_id = github.context.runId;
     const job = github.context.job;
-    const repo = `github.context.repo: github.com/${github.context.repo.owner}/${github.context.repo.repo}`
+    const repo = `github.com/${github.context.repo.owner}/${github.context.repo.repo}`
 
     core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
     core.info(`github.context.job: ${job}`)
