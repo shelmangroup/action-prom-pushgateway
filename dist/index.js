@@ -548,15 +548,14 @@ async function run() {
     const token = core.getInput('token');
     const octokit = github.getOctokit(token)
 
-    const workflowResponse = await octokit.actions.getWorkflowRun({
+    const jobsListWorkflowObj = await octokit.actions.listJobsForWorkflowRun({
       owner,
       repo,
-      run_id,
+      run_id
     });
 
-    core.info(`workloadResponse ${workflowResponse}`)
-    const workflow = JSON.stringify(workflowResponse, undefined, 2)
-    core.info(`workflow: ${workflow}`)
+    const jobsList = JSON.stringify(jobsListWorkflowObj, undefined, 2)
+    core.info(`jobsLit: ${jobsList}`)
     core.info('mark end')
 
 
