@@ -547,9 +547,9 @@ async function run() {
     });
 
     // octokit testing
-    const myToken = core.getInput('myToken');
+    const token = core.getInput('token');
     const octokit = new Octokit({
-      auth: myToken
+      auth: token
     });
 
     const workflowResponse = octokit.actions.getWorkflowRun({

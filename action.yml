@@ -5,6 +5,10 @@ inputs:
     description: 'prometheus pushgateway address'
     required: true
     default: 'http://127.0.0.1:9091'
+  token:
+    description: 'github token'
+    required: true
+    default: ''
 runs:
   using: 'node12'
   main: 'dist/index.js'
