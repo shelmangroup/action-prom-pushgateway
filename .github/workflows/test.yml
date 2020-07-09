@@ -15,7 +15,7 @@ jobs:
         image: prom/pushgateway
         ports:
           - 9091:9091
-
+    steps:
     - uses: actions/checkout@v1
     - run: npm ci
     - run: npm test
