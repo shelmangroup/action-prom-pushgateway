@@ -1,9 +1,8 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const client = require('prom-client');
+const { Octokit } = require("@octokit/rest");
 
-
-// most @actions toolkit packages have async methods
 async function run() {
   try { 
     const pushgatewayAddr = core.getInput('pushgateway')
@@ -16,6 +15,9 @@ async function run() {
     const Registry = client.Registry;
     const register = new Registry();
     const gateway = new client.Pushgateway(pushgatewayAddr, [], register);
+    const repo = github.context.repo.repo;
+    const owner = github.context.repo.owner;
+    const run_id = github.context.runId;
 
     core.info(`Got Prometheus Pushgateway address: ${pushgatewayAddr}`)
     core.info(`github.context.action: ${github.context.action}`)
@@ -36,7 +38,23 @@ async function run() {
       core.info(`Body: ${body}`);
     });
 
+    // octokit testing
+    const myToken = core.getInput('myToken');
+    const octokit = new Octokit({
+      auth: myToken
+    });
+
+    const workflowResponse = octokit.actions.getWorkflowRun({
+      owner,
+      repo,
+      run_id,
+    });
+
+    const workflow = JSON.stringify(workflowResponse, undefined, 2)
+    core.info(`workflow: ${workflow}`)
     core.info('mark end')
+
+
 
   }
   catch (error) {
