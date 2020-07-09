@@ -542,7 +542,7 @@ async function run() {
       name: `${prefix}_run`,
       help: `${prefix}_run`,
       registers: [register],
-      labelNames: ['repo', 'status', 'runid', `job`],
+      labelNames: ['repo', 'status', 'run_id', `job`],
     });
     register.registerMetric(metric_action_gauge);
     metric_action_gauge.set({
