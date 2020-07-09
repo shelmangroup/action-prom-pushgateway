@@ -40,7 +40,7 @@ async function run() {
     const token = core.getInput('token');
     const octokit = github.getOctokit(token)
 
-    const {workflowResponse} = await octokit.actions.getWorkflowRun({
+    const workflowResponse = await octokit.actions.getWorkflowRun({
       owner,
       repo,
       run_id,
