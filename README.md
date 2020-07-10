@@ -22,7 +22,6 @@ metrics sent currently
 
 example output from pushgateway
 ```bash
-curl -s http://localhost:9091/metrics | grep github
 # HELP github_actions_run github_actions_run
 # TYPE github_actions_run gauge
 github_actions_run{instance="",job="github_actions",repo="github.com/shelmangroup/action-prom-pushgateway",run_id="164250517",status="success"} 1
