@@ -26,7 +26,6 @@ on:
   push:
     branches:
       - master
-      - 'releases/*'
 
 jobs:
   trigger-good:
