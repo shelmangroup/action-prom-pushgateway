@@ -22,7 +22,6 @@ jobs:
 
     - uses: ./
       with:
-        token: ${{ secrets.GITHUB_TOKEN }}
         pushgateway: "http://localhost:9091"
         previousstate: ${{ job.status }}
       if: always()
