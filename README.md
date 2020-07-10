@@ -16,6 +16,21 @@ dependent on the sequentially run of steps.
 **Required** The status of the current job. Needed to report the result of the run
 
 
+## Metrics
+metrics sent currently
+* `github_actions_run` (labels=[job,repo,run_id,status]) status=(sucess or failure) sucessful run equals 1 failed run equals 0 gauge 
+
+example output from pushgateway
+```bash
+curl -s http://localhost:9091/metrics | grep github
+# HELP github_actions_run github_actions_run
+# TYPE github_actions_run gauge
+github_actions_run{instance="",job="github_actions",repo="github.com/shelmangroup/action-prom-pushgateway",run_id="164250517",status="success"} 1
+push_failure_time_seconds{instance="",job="github_actions"} 0
+push_time_seconds{instance="",job="github_actions"} 1.5943653317836294e+09
+```
+
+
 
 ## Example usage
 
